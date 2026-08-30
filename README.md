@@ -9,12 +9,13 @@ architecture, and data model before any code is written.
 
 ## MVP decisions (locked in)
 
+- **Launch market:** Mexico (Spanish-first, MXN pricing).
 - **Platform:** Airbnb only (iCal export). Booking.com is a fast-follow.
-- **Channel:** Telegram-first (free, unlimited once opted in), with SMS via
-  Twilio as the one-time onboarding step and fallback for cleaners who never
-  adopt Telegram. See design doc for why not WhatsApp.
+- **Channel:** SMS via Twilio as the primary channel; Telegram as an
+  optional per-cleaner opt-in. WhatsApp Cloud API is the highest-value
+  roadmap channel for Mexico — see design doc.
 - **Monetization:** platform-paid messaging; tiered subscription by property
-  count with a capped free tier and per-plan message quotas (also the cost
-  safety net).
+  count (MXN, lower-end pricing) with a capped free tier and per-plan
+  message quotas that double as the cost safety net.
 - **Stack:** Next.js (TypeScript) + PostgreSQL + Prisma + a scheduled worker
   for calendar polling.

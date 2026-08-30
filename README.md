@@ -15,7 +15,9 @@ architecture, and data model before any code is written.
   optional per-cleaner opt-in. WhatsApp Cloud API is the highest-value
   roadmap channel for Mexico — see design doc.
 - **Monetization:** platform-paid messaging; tiered subscription by property
-  count (MXN, lower-end pricing) with a capped free tier and per-plan
-  message quotas that double as the cost safety net.
+  count (MXN, lower-end pricing) with a 14-day trial and per-plan message
+  quotas that double as the cost safety net. SMS to Mexico costs ~$0.05/
+  segment, so templates are held to a single GSM-7 segment — see design doc
+  for unit economics.
 - **Stack:** Next.js (TypeScript) + PostgreSQL + Prisma + a scheduled worker
   for calendar polling.

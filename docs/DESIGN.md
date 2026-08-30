@@ -139,16 +139,37 @@ requirement, not an afterthought:
 - **Throttled test sends**: the "send test message to myself" button gets
   its own small daily cap, separate from real notification quota.
 
-**Pre-launch task:** confirm current Twilio per-segment SMS pricing to
-Mexican carriers and Mexico's A2P registration / sender-ID requirements
-(rules differ from the US, and long-code or short-code registration may be
-required). Since the platform absorbs this cost and SMS is the primary
-channel, this number directly sets the margin on every tier and should be
-verified before the quota figures below are finalized. Note also that
-messages exceeding the GSM-7 single-segment limit (160 chars, or 70 if any
-non-GSM character such as an emoji is present) bill as multiple segments —
-so the default message template should be kept short and accent-safe, and
-the template editor should show a live segment counter.
+**Still to confirm pre-launch:** Mexico's A2P registration / sender-ID
+requirements (rules differ from the US; long-code or short-code registration
+may be required).
+
+### The single-segment rule (hard constraint)
+
+SMS to Mexico costs **~$0.05 USD per segment**. Segment length depends on
+the character set:
+
+- **GSM-7** (plain ASCII, no accents): 160 characters per segment
+- **UCS-2** (any non-GSM character — á, é, í, ó, ú, ñ, ¿, ¡, emoji):
+  **70 characters** per segment
+
+A Spanish message written naturally with accents therefore costs *double or
+triple* a plain-ASCII one of the same length. At $0.05/segment this is the
+single largest cost lever in the product.
+
+Rules this imposes:
+
+1. **Every notification template must fit in one GSM-7 segment.** The
+   template editor enforces this — live segment counter, and it refuses to
+   save a template that would exceed one segment at render time (measured
+   with the longest plausible variable values, not the preview values).
+2. **Accent transliteration for SMS bodies** (á→a, ñ→n, ¿→omitted) is
+   available and on by default for the SMS channel. This is normal practice
+   for SMS in Latin America and remains perfectly readable in Spanish;
+   it halves the cost of every message. Telegram/WhatsApp bodies keep full
+   accents — the constraint is SMS-specific.
+3. Property nicknames are user-supplied and land inside the template, so
+   the length check must account for the actual property name, and the
+   properties UI should warn when a long name pushes messages over.
 
 ## Architecture overview
 
@@ -246,15 +267,13 @@ scale demands it.
 The launch market is Mexico, so **Spanish is a first-class requirement, not
 a later i18n pass**:
 
-- Default message templates ship in Spanish (with English available).
+- Default message templates ship in Spanish (with English available), written
+  to fit one GSM-7 segment after transliteration — see "The single-segment
+  rule" above, which at $0.05/segment is a cost requirement, not a
+  preference.
 - The host-facing web UI should be built i18n-ready from the first commit
   (string catalog, no hardcoded copy) even if English ships first — retrofitting
   i18n later is far more expensive than starting with it.
-- Message templates should stay accent-safe where practical: accented
-  characters (á, é, ñ) push an SMS out of the GSM-7 alphabet into UCS-2,
-  cutting the per-segment limit from 160 to 70 characters and multiplying
-  cost per message. The template editor's segment counter should make this
-  visible to the host as they type.
 - Dates/times formatted per locale, and phone numbers stored in E.164 with
   Mexico (+52) as the default country.
 
@@ -293,35 +312,70 @@ Priced for the **Mexican market**, deliberately at the lower end — these are
 not US/EU price points. Charge in **MXN**, not USD: local-currency pricing
 converts better and avoids card foreign-transaction friction.
 
-Starting ladder (first draft, to be finalized after the Twilio Mexico SMS
-cost check above):
+### Unit economics
 
-| Tier | Properties | Included messages/mo | Price (MXN/mo) | ≈ USD |
-|---|---|---|---|---|
-| Free | 1 | 15 | $0 | $0 |
-| Starter | up to 3 | 120 | ~$149 | ~$8 |
-| Growth | up to 10 | 500 | ~$399 | ~$22 |
-| Pro | unlimited | custom | contact | — |
+At **$0.05 USD per SMS segment** and the one-segment rule enforced above,
+each checkout notification costs the platform $0.05. Expected real usage is
+roughly **10 notifications per property per month** (8–15 turnovers).
 
-Notes on these numbers:
+| Tier | Properties | Quota/mo | Price (MXN) | ≈ USD | Expected cost | Worst case (at quota) | Margin (expected) |
+|---|---|---|---|---|---|---|---|
+| Trial (14d) | up to 3 | 25 total | $0 | $0 | ≤$1.25 one-time | $1.25 one-time | — |
+| Starter | up to 3 | 60 | ~$149 | ~$8 | ~$1.50 | $3.00 | ~81% |
+| Growth | up to 10 | 200 | ~$399 | ~$21 | ~$5.00 | $10.00 | ~76% |
+| Pro | unlimited | per-property | contact | — | — | capped per property | — |
 
-- Message quotas are sized generously relative to real usage — a property
-  turns over maybe 8–15 times a month, one notification each — so a normal
-  host never notices the cap. The cap exists to bound a runaway bug or an
-  abusive account, not to nickel-and-dime real hosts.
-- The **gap between the quota and typical real usage is the safety margin**;
-  the gap between subscription price and expected SMS cost per account is
-  the margin. Both need re-checking once actual Twilio Mexico rates are
-  confirmed, since SMS is the primary (and paid) channel here — if
-  per-message cost turns out high, the lever to pull is tightening quotas,
-  not raising prices out of the market.
-- Free tier stays genuinely useful (one property, real automation) — it's
-  the acquisition hook, and a single-property host who upgrades to a second
-  property is the most natural conversion path.
+Quotas are set at **roughly 2× expected usage** — enough headroom that a
+normal host never hits the cap, tight enough that a runaway bug or abusive
+account can't exceed the worst-case column. That worst case is the real
+purpose of the quota: it's a hard bound on platform liability per account
+per month, not a way to upsell.
+
+### Why a trial instead of a perpetual free tier
+
+A perpetual free tier at this COGS is a recurring liability: one free
+property is ~$0.50/month of SMS forever, with no conversion guarantee. Two
+hundred idle free accounts is $100+/month of pure burn.
+
+A **14-day full-featured trial with a 25-message hard cap** bounds exposure
+to a one-time ~$1.25 per signup, and converts better anyway — the host
+experiences the full product (multiple properties, real automation) rather
+than a deliberately limited version. Revisit a free tier later if organic
+acquisition needs it and the channel mix has moved off SMS.
+
+### Cost trajectory
+
+Margin improves as messaging moves off SMS, which makes the channel roadmap
+a financial priority, not just a UX one:
+
+- **Telegram** now clearly pays for itself: the invite costs one SMS
+  ($0.05) and breaks even the moment that cleaner receives a single
+  notification over Telegram. Every converted cleaner is ~$0.50/month saved
+  per property they cover. Low adoption in Mexico caps the upside, but the
+  downside is one message — worth offering.
+- **WhatsApp** is the structural fix. Meta's utility-template rate in Mexico
+  is a fraction of $0.05/segment, and unlike Telegram it's the app cleaners
+  already use — so it has both the cost advantage *and* a realistic path to
+  near-universal adoption. Confirm Meta's current Mexico utility rate card,
+  but at these SMS prices WhatsApp is likely the difference between ~75%
+  and ~95% gross margin. It should be the first roadmap item after the core
+  loop works.
 
 Overage handling for the MVP: soft-block with an upgrade prompt rather than
-metered overage billing — simpler to reason about on both sides while the
-product is new, and it hard-caps platform cost by construction.
+metered overage billing — simpler to reason about on both sides, and it
+hard-caps platform cost by construction.
+
+### Cost-control specifics at $0.05/message
+
+- **Manual "notify now"** and **test sends** need their own tight daily caps
+  (e.g. 5/day each) — they bypass the booking-driven flow, so they're the
+  easiest way to run up a bill by accident.
+- **Host failure alerts** don't count against host quota (see above) but
+  *do* cost the platform, so the dedup window on them matters: one alert SMS
+  per host per hour maximum, collapsing multiple failures into one message.
+- Track **cost per account per month** as a first-class metric from day one,
+  not just message counts — it's the number that tells you whether a tier is
+  priced correctly.
 
 ## Roadmap after MVP
 

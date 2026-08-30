@@ -10,7 +10,11 @@ architecture, and data model before any code is written.
 ## MVP decisions (locked in)
 
 - **Platform:** Airbnb only (iCal export). Booking.com is a fast-follow.
-- **Channel:** SMS via Twilio. WhatsApp Cloud API is a fast-follow (see
-  design doc for why WhatsApp can't launch on day one).
+- **Channel:** Telegram-first (free, unlimited once opted in), with SMS via
+  Twilio as the one-time onboarding step and fallback for cleaners who never
+  adopt Telegram. See design doc for why not WhatsApp.
+- **Monetization:** platform-paid messaging; tiered subscription by property
+  count with a capped free tier and per-plan message quotas (also the cost
+  safety net).
 - **Stack:** Next.js (TypeScript) + PostgreSQL + Prisma + a scheduled worker
   for calendar polling.

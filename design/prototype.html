@@ -6,11 +6,11 @@
   :root{
     --ground:#F6F9F8; --surface:#FFFFFF; --surface-2:#EDF2F1; --line:#D9E3E1; --line-2:#C3D3D0;
     --ink:#11262B; --ink-2:#48605F; --ink-3:#718885;
-    --accent:#0E7C7B; --accent-ink:#0A5D5C; --accent-soft:#D8ECEB;
-    --urgent:#C2410C; --urgent-soft:#FBE7DC;
-    --ok:#2C7A4B; --ok-soft:#DAEDE1;
+    --accent:#0E7C7B; --accent-ink:#0A5D5C; --accent-soft:#D8ECEB; --on-accent:#FFFFFF;
+    --urgent:#C2410C; --urgent-soft:#FBE7DC; --on-urgent:#FFFFFF;
+    --ok:#2C7A4B; --ok-soft:#DAEDE1; --on-ok:#FFFFFF;
     --warn:#9E6D14; --warn-soft:#F6E9CF;
-    --crit:#A93A2B; --crit-soft:#F7E1DD;
+    --crit:#A93A2B; --crit-soft:#F7E1DD; --on-crit:#FFFFFF;
     --shadow:0 1px 2px rgba(17,38,43,.06), 0 8px 24px -12px rgba(17,38,43,.18);
     --radius:10px;
     --sans:"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -21,22 +21,22 @@
     :root:not([data-theme="light"]){
       --ground:#0B1618; --surface:#122123; --surface-2:#182D2F; --line:#254040; --line-2:#33534F;
       --ink:#E5EFED; --ink-2:#9CB4B1; --ink-3:#7B9490;
-      --accent:#3FBFB4; --accent-ink:#6FD6CD; --accent-soft:#123634;
-      --urgent:#F4834B; --urgent-soft:#3A2016;
-      --ok:#5FBE86; --ok-soft:#14301E;
+      --accent:#3FBFB4; --accent-ink:#6FD6CD; --accent-soft:#123634; --on-accent:#08201F;
+      --urgent:#F4834B; --urgent-soft:#3A2016; --on-urgent:#2B1108;
+      --ok:#5FBE86; --ok-soft:#14301E; --on-ok:#08210F;
       --warn:#DCA745; --warn-soft:#332711;
-      --crit:#E5786A; --crit-soft:#361A18;
+      --crit:#E5786A; --crit-soft:#361A18; --on-crit:#2A0D0A;
       --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
     }
   }
   :root[data-theme="dark"]{
     --ground:#0B1618; --surface:#122123; --surface-2:#182D2F; --line:#254040; --line-2:#33534F;
     --ink:#E5EFED; --ink-2:#9CB4B1; --ink-3:#7B9490;
-    --accent:#3FBFB4; --accent-ink:#6FD6CD; --accent-soft:#123634;
-    --urgent:#F4834B; --urgent-soft:#3A2016;
-    --ok:#5FBE86; --ok-soft:#14301E;
+    --accent:#3FBFB4; --accent-ink:#6FD6CD; --accent-soft:#123634; --on-accent:#08201F;
+    --urgent:#F4834B; --urgent-soft:#3A2016; --on-urgent:#2B1108;
+    --ok:#5FBE86; --ok-soft:#14301E; --on-ok:#08210F;
     --warn:#DCA745; --warn-soft:#332711;
-    --crit:#E5786A; --crit-soft:#361A18;
+    --crit:#E5786A; --crit-soft:#361A18; --on-crit:#2A0D0A;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
   }
 
@@ -46,16 +46,33 @@
   h1,h2,h3,h4{font-family:var(--display); margin:0; text-wrap:balance; letter-spacing:-.012em}
   p{margin:0}
   button{font:inherit; color:inherit; cursor:pointer}
+  select{font:inherit; color:inherit}
   :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
   .num{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
   /* ---------- shell ---------- */
-  .app{display:grid; grid-template-columns:216px 1fr; min-height:100vh}
+  .app{display:grid; grid-template-columns:222px 1fr; min-height:100vh}
   .rail{background:var(--surface); border-right:1px solid var(--line); display:flex; flex-direction:column;
         position:sticky; top:0; height:100vh}
-  .brand{padding:18px 18px 14px; border-bottom:1px solid var(--line); display:flex; align-items:baseline; gap:8px}
+  .brand{padding:15px 14px 13px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:8px}
   .brand b{font-family:var(--display); font-weight:700; font-size:19px; letter-spacing:-.03em}
-  .brand span{font-size:10px; text-transform:uppercase; letter-spacing:.11em; color:var(--ink-3); font-weight:600}
+  .brand .mx{font-size:10px; text-transform:uppercase; letter-spacing:.11em; color:var(--ink-3); font-weight:600}
+  .brand-ctl{margin-left:auto; display:flex; align-items:center; gap:5px}
+  .lang{background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:3px 5px;
+        font-size:11.5px; font-weight:600; cursor:pointer}
+  .themebtn{background:var(--surface-2); border:1px solid var(--line); border-radius:6px; width:27px; height:25px;
+            display:grid; place-items:center; padding:0}
+  .themebtn:hover{border-color:var(--accent)}
+  .themebtn svg{width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.8;
+                stroke-linecap:round; stroke-linejoin:round}
+  .themebtn .moon{display:none}
+  :root[data-theme="dark"] .themebtn .moon{display:block}
+  :root[data-theme="dark"] .themebtn .sun{display:none}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]):not([data-theme="dark"]) .themebtn .moon{display:block}
+    :root:not([data-theme="light"]):not([data-theme="dark"]) .themebtn .sun{display:none}
+  }
+
   .nav{padding:10px; display:flex; flex-direction:column; gap:2px; flex:1; overflow-y:auto}
   .nav button{display:flex; align-items:center; gap:9px; width:100%; text-align:left; background:none; border:0;
               padding:8px 10px; border-radius:7px; color:var(--ink-2); font-weight:500; font-size:13.5px}
@@ -64,16 +81,15 @@
   .nav svg{width:16px; height:16px; flex:none; stroke:currentColor; fill:none; stroke-width:1.7;
            stroke-linecap:round; stroke-linejoin:round}
   .nav .tally{margin-left:auto; font-family:var(--mono); font-size:11px; font-weight:600;
-              background:var(--crit); color:#fff; border-radius:20px; padding:1px 6px}
-  :root[data-theme="dark"] .nav .tally, :root:not([data-theme="light"]) .nav .tally{color:#2A0D0A}
-  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .nav .tally{color:#fff}}
-  .rail-foot{padding:12px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:8px}
+              background:var(--crit); color:var(--on-crit); border-radius:20px; padding:1px 6px}
+  .rail-foot{padding:12px; border-top:1px solid var(--line)}
   .meter{display:flex; flex-direction:column; gap:5px}
   .meter-top{display:flex; justify-content:space-between; align-items:baseline; font-size:11px; color:var(--ink-3);
              text-transform:uppercase; letter-spacing:.08em; font-weight:600}
   .meter-bar{height:5px; border-radius:20px; background:var(--surface-2); overflow:hidden}
   .meter-fill{height:100%; background:var(--accent); border-radius:20px}
-  .meter-note{font-size:11.5px; color:var(--ink-3)}
+  .meter-note{font-size:11.5px; color:var(--ink-3); line-height:1.45}
+  .meter-note b{color:var(--ink-2); font-weight:600}
 
   main{padding:22px 26px 60px; max-width:1240px}
   .head{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:18px}
@@ -86,16 +102,15 @@
   .block{display:flex; flex-direction:column; gap:10px}
   .block-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px}
   .block-head h2{font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-2)}
-
   .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius)}
 
   /* ---------- attention ---------- */
   .alerts{display:flex; flex-direction:column; gap:8px}
   .alert{display:flex; gap:12px; align-items:flex-start; padding:12px 14px; border-radius:var(--radius);
-         border:1px solid var(--line); background:var(--surface); border-left:3px solid var(--ink-3)}
+         border:1px solid var(--line); background:var(--surface); border-left:3px solid var(--ink-3); flex-wrap:wrap}
   .alert.is-crit{border-left-color:var(--crit); background:var(--crit-soft); border-color:transparent}
   .alert.is-warn{border-left-color:var(--warn); background:var(--warn-soft); border-color:transparent}
-  .alert-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px}
+  .alert-body{flex:1; min-width:220px; display:flex; flex-direction:column; gap:2px}
   .alert-body strong{font-weight:600; font-size:13.5px}
   .alert-body span{color:var(--ink-2); font-size:12.5px}
   .alert-act{display:flex; gap:6px; flex:none; flex-wrap:wrap}
@@ -103,14 +118,12 @@
   .btn{border:1px solid var(--line-2); background:var(--surface); border-radius:7px; padding:5px 11px;
        font-size:12.5px; font-weight:500; white-space:nowrap}
   .btn:hover{border-color:var(--accent); color:var(--accent-ink)}
-  .btn-primary{background:var(--accent); border-color:var(--accent); color:#fff}
-  :root[data-theme="dark"] .btn-primary, :root:not([data-theme="light"]) .btn-primary{color:#08201F}
-  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .btn-primary{color:#fff}}
-  .btn-primary:hover{filter:brightness(1.07); color:inherit}
+  .btn-primary{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+  .btn-primary:hover{filter:brightness(1.07); color:var(--on-accent)}
 
   /* ---------- turnover rows ---------- */
   .turnovers{display:flex; flex-direction:column}
-  .turn{display:grid; grid-template-columns:74px 1fr 210px auto; gap:16px; align-items:center;
+  .turn{display:grid; grid-template-columns:74px 1fr 214px auto; gap:16px; align-items:center;
         padding:13px 16px; border-bottom:1px solid var(--line)}
   .turn:last-child{border-bottom:0}
   .turn.is-urgent{background:var(--urgent-soft)}
@@ -129,18 +142,18 @@
   .pill-ok{background:var(--ok-soft); color:var(--ok)}
   .pill-warn{background:var(--warn-soft); color:var(--warn)}
   .pill-crit{background:var(--crit-soft); color:var(--crit)}
-  .pill-urgent{background:var(--urgent); color:#fff}
-  :root[data-theme="dark"] .pill-urgent, :root:not([data-theme="light"]) .pill-urgent{color:#2B1108}
-  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .pill-urgent{color:#fff}}
+  .pill-urgent{background:var(--urgent); color:var(--on-urgent)}
   .pill-quiet{background:var(--surface-2); color:var(--ink-2)}
+  .pill-lang{background:var(--surface-2); color:var(--ink-2); font-family:var(--mono); font-size:10.5px;
+             text-transform:uppercase; letter-spacing:.05em}
   .dot{width:6px; height:6px; border-radius:50%; background:currentColor; flex:none}
 
   /* ---------- cascade ladder ---------- */
   .ladder{display:flex; flex-direction:column; gap:0; padding:2px 0}
-  .rung{display:flex; align-items:center; gap:9px; font-size:12.5px; padding:3px 0; position:relative}
+  .rung{display:flex; align-items:center; gap:9px; font-size:12.5px; padding:3px 0}
   .rung .idx{width:17px; height:17px; border-radius:50%; display:grid; place-items:center; flex:none;
              font-family:var(--mono); font-size:10px; font-weight:600; border:1px solid var(--line-2); color:var(--ink-3)}
-  .rung.done .idx{background:var(--ok); border-color:var(--ok); color:var(--surface)}
+  .rung.done .idx{background:var(--ok); border-color:var(--ok); color:var(--on-ok)}
   .rung.reject .idx{background:var(--crit-soft); border-color:var(--crit); color:var(--crit)}
   .rung.live .idx{background:var(--warn); border-color:var(--warn); color:var(--surface)}
   .rung .who{font-weight:500}
@@ -148,10 +161,10 @@
 
   /* ---------- timeline calendar ---------- */
   .cal-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface)}
-  .cal{min-width:920px}
-  .cal-row{display:grid; grid-template-columns:168px repeat(14, 1fr); border-bottom:1px solid var(--line)}
+  .cal{min-width:940px}
+  .cal-row{display:grid; grid-template-columns:172px repeat(14, 1fr); border-bottom:1px solid var(--line)}
   .cal-row:last-child{border-bottom:0}
-  .cal-head{position:sticky; top:0; background:var(--surface-2); z-index:2}
+  .cal-head{background:var(--surface-2)}
   .cal-daycell{padding:7px 2px; text-align:center; border-left:1px solid var(--line)}
   .cal-daycell .dow{font-size:9.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-3); font-weight:600}
   .cal-daycell .dnum{font-family:var(--mono); font-size:13px; font-weight:600}
@@ -163,41 +176,42 @@
   .cal-prop b{font-size:13px; font-weight:600}
   .cal-prop span{font-size:11px; color:var(--ink-3); font-family:var(--mono)}
   .cal-track{grid-column:2 / -1; grid-row:1; display:grid; grid-template-columns:repeat(14,1fr); position:relative;
-             padding:9px 0; gap:0}
+             padding:9px 0}
   .cal-grid{grid-column:2 / -1; grid-row:1; display:grid; grid-template-columns:repeat(14,1fr)}
   .cal-cellline{border-left:1px solid var(--line)}
   .cal-cellline.today{background:var(--accent-soft); opacity:.45}
   .stay{grid-row:1; height:26px; border-radius:5px; display:flex; align-items:center; padding:0 8px; gap:6px;
         font-size:11.5px; font-weight:600; margin:0 2px; overflow:hidden; white-space:nowrap}
-  .stay-abnb{background:var(--accent-soft); color:var(--accent-ink); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent)}
+  .stay-abnb{background:var(--accent-soft); color:var(--accent-ink);
+             border:1px solid color-mix(in srgb, var(--accent) 35%, transparent)}
   .stay-bkg{background:var(--surface-2); color:var(--ink-2); border:1px solid var(--line-2)}
   .stay .src{font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.06em; opacity:.75}
   .turnmark{position:absolute; top:2px; bottom:2px; width:2px; background:var(--urgent); border-radius:2px}
   .legend{display:flex; gap:16px; flex-wrap:wrap; align-items:center; color:var(--ink-3); font-size:12px; padding:2px}
   .legend i{display:inline-block; width:13px; height:13px; border-radius:4px; vertical-align:-2px; margin-right:6px}
 
-  /* ---------- tables / lists ---------- */
+  /* ---------- rows ---------- */
   .rows{display:flex; flex-direction:column}
   .row{display:grid; gap:14px; align-items:center; padding:12px 16px; border-bottom:1px solid var(--line)}
   .row:last-child{border-bottom:0}
-  .row-prop{grid-template-columns:1fr 190px 150px auto}
-  .row-clean{grid-template-columns:1fr 160px 1fr 128px}
-  .row-msg{grid-template-columns:92px 1fr 148px 118px 78px}
+  .row-prop{grid-template-columns:1fr 190px 148px 168px}
+  .row-clean{grid-template-columns:1fr 132px 118px 1fr 104px}
+  .row-msg{grid-template-columns:84px 1fr 146px 128px 108px}
   .rowhead{background:var(--surface-2); font-size:10.5px; text-transform:uppercase; letter-spacing:.09em;
            font-weight:600; color:var(--ink-3); padding:8px 16px}
-  .cellname{display:flex; flex-direction:column; gap:2px}
+  .cellname{display:flex; flex-direction:column; gap:2px; min-width:0}
   .cellname b{font-weight:600; font-size:13.5px}
   .cellname span{font-size:12px; color:var(--ink-3)}
   .stack-chips{display:flex; gap:5px; flex-wrap:wrap}
-
-  .prio{display:flex; align-items:center; gap:7px; font-size:12.5px}
+  .prio{display:flex; align-items:center; gap:7px; font-size:12.5px; padding:1px 0}
   .prio .rank{font-family:var(--mono); font-size:10px; font-weight:600; color:var(--ink-3);
                border:1px solid var(--line-2); border-radius:4px; padding:0 4px}
 
   /* ---------- composer ---------- */
   .split{display:grid; grid-template-columns:1fr 320px; gap:18px; align-items:start}
   .pad{padding:16px}
-  .tabs{display:flex; gap:4px; padding:4px; background:var(--surface-2); border-radius:8px; width:fit-content}
+  .tabs{display:flex; gap:4px; padding:4px; background:var(--surface-2); border-radius:8px; width:fit-content;
+        flex-wrap:wrap}
   .tabs button{border:0; background:none; padding:5px 13px; border-radius:6px; font-size:12.5px; font-weight:600;
                color:var(--ink-3)}
   .tabs button[aria-selected="true"]{background:var(--surface); color:var(--ink); box-shadow:var(--shadow)}
@@ -224,7 +238,7 @@
          box-shadow:var(--shadow)}
   .phone-bar{background:var(--ink); color:var(--ground); display:flex; justify-content:space-between;
              padding:5px 16px 8px; font-family:var(--mono); font-size:10.5px}
-  .phone-scroll{height:530px; overflow-y:auto; background:var(--ground)}
+  .phone-scroll{height:540px; overflow-y:auto; background:var(--ground)}
   .sms{padding:14px 12px; background:var(--surface-2); border-bottom:1px solid var(--line)}
   .sms-from{font-size:10.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.08em; font-weight:600;
             margin-bottom:6px}
@@ -235,7 +249,7 @@
   .job-hd{display:flex; flex-direction:column; gap:5px}
   .job-hd .eyebrow{color:var(--urgent)}
   .job-hd h3{font-size:19px; font-weight:700}
-  .job-facts{display:flex; flex-direction:column; gap:0; border:1px solid var(--line); border-radius:9px;
+  .job-facts{display:flex; flex-direction:column; border:1px solid var(--line); border-radius:9px;
              background:var(--surface); overflow:hidden}
   .fact{display:flex; justify-content:space-between; gap:12px; padding:9px 12px; border-bottom:1px solid var(--line);
         font-size:12.5px}
@@ -247,31 +261,32 @@
   .job-acts{display:flex; flex-direction:column; gap:8px}
   .big{padding:13px; border-radius:10px; border:1px solid var(--line-2); background:var(--surface); font-weight:600;
        font-size:14.5px; text-align:center}
-  .big-yes{background:var(--ok); border-color:var(--ok); color:#fff}
-  :root[data-theme="dark"] .big-yes, :root:not([data-theme="light"]) .big-yes{color:#08210F}
-  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .big-yes{color:#fff}}
+  .big-yes{background:var(--ok); border-color:var(--ok); color:var(--on-ok)}
+  .phone-switch{display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap}
 
   .notes{display:flex; flex-direction:column; gap:12px}
   .note{border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:var(--radius);
         padding:13px 15px; background:var(--surface); display:flex; flex-direction:column; gap:5px}
   .note b{font-size:13px; font-weight:600}
   .note p{font-size:12.5px; color:var(--ink-2); line-height:1.55}
+  .notes-flag{font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; font-weight:600; color:var(--ink-3);
+              display:flex; align-items:center; gap:8px}
+  .notes-flag::after{content:""; flex:1; height:1px; background:var(--line)}
 
   .banner{display:flex; gap:11px; align-items:flex-start; padding:11px 14px; border-radius:9px;
           background:var(--accent-soft); color:var(--accent-ink); font-size:12.5px; line-height:1.5}
   .banner b{font-weight:600}
 
-  @media (max-width: 940px){
+  @media (max-width: 960px){
     .app{grid-template-columns:1fr}
-    .rail{position:static; height:auto; flex-direction:row; align-items:center; gap:8px; overflow-x:auto;
-          border-right:0; border-bottom:1px solid var(--line)}
-    .brand{border-bottom:0; border-right:1px solid var(--line); flex:none}
-    .nav{flex-direction:row; flex:1; padding:8px}
-    .nav button{white-space:nowrap}
-    .rail-foot{display:none}
+    .rail{position:static; height:auto}
+    .nav{flex-direction:row; overflow-x:auto; padding:8px}
+    .nav button{white-space:nowrap; width:auto}
+    .rail-foot{padding:10px 14px}
     main{padding:18px 16px 50px}
     .split, .phone-stage{grid-template-columns:1fr}
-    .turn{grid-template-columns:64px 1fr; row-gap:10px}
+    .phone{max-width:100%}
+    .turn{grid-template-columns:66px 1fr; row-gap:10px}
     .row-prop,.row-clean,.row-msg{grid-template-columns:1fr 1fr}
     .rowhead{display:none}
   }
@@ -280,38 +295,55 @@
 
 <div class="app">
   <aside class="rail">
-    <div class="brand"><b>Turno</b><span>MX</span></div>
+    <div class="brand">
+      <b>Turno</b><span class="mx">MX</span>
+      <div class="brand-ctl">
+        <select class="lang" id="uiLang" aria-label="Interface language">
+          <option value="en">EN</option>
+          <option value="es">ES</option>
+          <option value="fr">FR</option>
+          <option value="nl">NL</option>
+        </select>
+        <button class="themebtn" id="themeBtn" aria-label="Toggle dark mode">
+          <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+          <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"/></svg>
+        </button>
+      </div>
+    </div>
+
     <nav class="nav" id="nav">
       <button data-screen="today" aria-current="true">
         <svg viewBox="0 0 24 24"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
-        Today<span class="tally">2</span>
+        <span data-i18n="nav.today">Today</span><span class="tally">2</span>
       </button>
       <button data-screen="calendar">
         <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-        Calendar
+        <span data-i18n="nav.calendar">Calendar</span>
       </button>
       <button data-screen="properties">
         <svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M9.5 21v-6h5v6"/></svg>
-        Properties
+        <span data-i18n="nav.properties">Properties</span>
       </button>
       <button data-screen="cleaners">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6"/></svg>
-        Cleaners
+        <span data-i18n="nav.cleaners">Cleaners</span>
       </button>
       <button data-screen="messages">
         <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>
-        Messages
+        <span data-i18n="nav.messages">Messages</span>
       </button>
       <button data-screen="cleanerview">
         <svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>
-        Cleaner view
+        <span data-i18n="nav.cleanerview">Cleaner view</span>
       </button>
     </nav>
+
     <div class="rail-foot">
       <div class="meter">
-        <div class="meter-top"><span>Messages</span><span class="num">142 / 200</span></div>
+        <div class="meter-top"><span data-i18n="meter.title">Your plan</span><span class="num">58</span></div>
         <div class="meter-bar"><div class="meter-fill" style="width:71%"></div></div>
-        <div class="meter-note">Growth plan · $399 MXN/mo<br>Est. cost this month <span class="num">$7.10 USD</span></div>
+        <p class="meter-note" data-i18n-html="meter.note">
+          <b>58 messages left</b> of 200 this month.<br>Renews 1 October.</p>
       </div>
     </div>
   </aside>
@@ -321,96 +353,107 @@
     <section id="today">
       <div class="head">
         <div>
-          <h1>Wednesday, 9 September</h1>
-          <p class="sub">4 checkouts today · 1 same-day turnover · 3 of 4 cleaners confirmed</p>
+          <h1 data-i18n="today.title">Wednesday, 9 September</h1>
+          <p class="sub" data-i18n="today.sub">4 checkouts today · 1 same-day turnover · 3 of 4 cleaners confirmed</p>
         </div>
-        <button class="btn">Sync calendars now</button>
+        <button class="btn" data-i18n="today.sync">Sync calendars now</button>
       </div>
 
       <div class="stack">
         <div class="block">
-          <div class="block-head"><h2>Needs you</h2></div>
+          <div class="block-head"><h2 data-i18n="today.needs">Needs you</h2></div>
           <div class="alerts">
             <div class="alert is-crit">
               <div class="alert-body">
-                <strong>Message to Alma Vargas could not be delivered</strong>
-                <span>Carrier rejected +52 55 4417 8890 — number unreachable. Coyoacán Casita is still unassigned.</span>
+                <strong data-i18n="alert.failTitle">Message to Alma Vargas could not be delivered</strong>
+                <span data-i18n="alert.failBody">Carrier rejected +52 55 4417 8890 — number unreachable. Coyoacán Casita is still unassigned.</span>
               </div>
               <div class="alert-act">
-                <button class="btn">Update number</button>
-                <button class="btn btn-primary">Offer to someone else</button>
+                <button class="btn" data-i18n="alert.updateNum">Update number</button>
+                <button class="btn btn-primary" data-i18n="alert.offerElse">Offer to someone else</button>
               </div>
             </div>
             <div class="alert is-warn">
               <div class="alert-body">
-                <strong>Condesa Loft — no answer from María yet</strong>
-                <span>Offered 18 minutes ago. Moves to Lupita Ramírez automatically in <span class="num">12 min</span>.</span>
+                <strong data-i18n="alert.waitTitle">Condesa Loft — no answer from María yet</strong>
+                <span data-i18n="alert.waitBody">Offered 18 minutes ago. Moves to Lupita Ramírez automatically in 12 minutes.</span>
               </div>
               <div class="alert-act">
-                <button class="btn">Skip to Lupita</button>
-                <button class="btn">Keep waiting</button>
+                <button class="btn" data-i18n="alert.skip">Skip to Lupita</button>
+                <button class="btn" data-i18n="alert.keepWaiting">Keep waiting</button>
               </div>
             </div>
           </div>
         </div>
 
         <div class="block">
-          <div class="block-head"><h2>Today's turnovers</h2><span class="eyebrow">Times are checkout, CDMX</span></div>
+          <div class="block-head">
+            <h2 data-i18n="today.turnovers">Today's turnovers</h2>
+            <span class="eyebrow" data-i18n="today.tz">Times are checkout, CDMX</span>
+          </div>
           <div class="card turnovers">
 
             <div class="turn">
-              <div class="turn-time"><b>10:00</b><span>Checkout</span></div>
+              <div class="turn-time"><b>10:00</b><span data-i18n="w.checkout">Checkout</span></div>
               <div class="turn-prop">
                 <b>Coyoacán Casita</b>
-                <div class="turn-meta"><span>Francisco Sosa 210</span><span>·</span><span>Airbnb</span><span>·</span><span>Next guest Sep 14</span></div>
+                <div class="turn-meta"><span>Francisco Sosa 210</span><span>·</span><span>Airbnb</span><span>·</span>
+                  <span><span data-i18n="w.nextGuest">Next guest</span> 14 Sep</span></div>
               </div>
               <div class="ladder">
-                <div class="rung reject"><span class="idx">1</span><span class="who">María Hernández</span><span class="out">declined 08:12</span></div>
-                <div class="rung reject"><span class="idx">2</span><span class="who">Alma Vargas</span><span class="out">undelivered</span></div>
-                <div class="rung"><span class="idx">3</span><span class="who">Carmen Soto</span><span class="out">not offered</span></div>
+                <div class="rung reject"><span class="idx">1</span><span class="who">María Hernández</span>
+                  <span class="out"><span data-i18n="w.declined">declined</span> 08:12</span></div>
+                <div class="rung reject"><span class="idx">2</span><span class="who">Alma Vargas</span>
+                  <span class="out" data-i18n="w.undelivered">undelivered</span></div>
+                <div class="rung"><span class="idx">3</span><span class="who">Carmen Soto</span>
+                  <span class="out" data-i18n="w.notOffered">not offered</span></div>
               </div>
-              <div><span class="pill pill-crit"><i class="dot"></i>Unassigned</span></div>
+              <div><span class="pill pill-crit"><i class="dot"></i><span data-i18n="w.unassigned">Unassigned</span></span></div>
             </div>
 
             <div class="turn">
-              <div class="turn-time"><b>11:00</b><span>Checkout</span></div>
+              <div class="turn-time"><b>11:00</b><span data-i18n="w.checkout">Checkout</span></div>
               <div class="turn-prop">
                 <b>Roma Norte 42</b>
-                <div class="turn-meta"><span>Colima 118, int 4</span><span>·</span><span>Airbnb</span><span>·</span><span>Next guest Sep 11</span></div>
+                <div class="turn-meta"><span>Colima 118, int 4</span><span>·</span><span>Airbnb</span><span>·</span>
+                  <span><span data-i18n="w.nextGuest">Next guest</span> 11 Sep</span></div>
               </div>
               <div class="turn-cleaner">
                 <b>María Hernández</b>
-                <span>Accepted 07:41 · arriving 11:30</span>
+                <span><span data-i18n="w.accepted">Accepted</span> 07:41 · <span data-i18n="w.arriving">arriving</span> 11:30</span>
               </div>
-              <div><span class="pill pill-ok"><i class="dot"></i>Confirmed</span></div>
+              <div><span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.confirmed">Confirmed</span></span></div>
             </div>
 
             <div class="turn">
-              <div class="turn-time"><b>11:00</b><span>Checkout</span></div>
+              <div class="turn-time"><b>11:00</b><span data-i18n="w.checkout">Checkout</span></div>
               <div class="turn-prop">
                 <b>Condesa Loft</b>
-                <div class="turn-meta"><span>Ámsterdam 71</span><span>·</span><span>Airbnb</span><span>·</span><span>Next guest Sep 13</span></div>
+                <div class="turn-meta"><span>Ámsterdam 71</span><span>·</span><span>Airbnb</span><span>·</span>
+                  <span><span data-i18n="w.nextGuest">Next guest</span> 13 Sep</span></div>
               </div>
               <div class="ladder">
-                <div class="rung live"><span class="idx">1</span><span class="who">María Hernández</span><span class="out">waiting 18m</span></div>
-                <div class="rung"><span class="idx">2</span><span class="who">Lupita Ramírez</span><span class="out">in 12m</span></div>
+                <div class="rung live"><span class="idx">1</span><span class="who">María Hernández</span>
+                  <span class="out"><span data-i18n="w.waiting">waiting</span> 18m</span></div>
+                <div class="rung"><span class="idx">2</span><span class="who">Lupita Ramírez</span>
+                  <span class="out"><span data-i18n="w.in">in</span> 12m</span></div>
                 <div class="rung"><span class="idx">3</span><span class="who">Josefina Cruz</span><span class="out">—</span></div>
               </div>
-              <div><span class="pill pill-warn"><i class="dot"></i>Awaiting reply</span></div>
+              <div><span class="pill pill-warn"><i class="dot"></i><span data-i18n="w.awaiting">Awaiting reply</span></span></div>
             </div>
 
             <div class="turn is-urgent">
-              <div class="turn-time"><b>12:00</b><span>Checkout</span></div>
+              <div class="turn-time"><b>12:00</b><span data-i18n="w.checkout">Checkout</span></div>
               <div class="turn-prop">
                 <b>Polanco 15B</b>
                 <div class="turn-meta"><span>Emilio Castelar 30</span><span>·</span><span>Booking.com</span><span>·</span>
-                  <span class="pill pill-urgent">Same-day · guest arrives 15:00</span></div>
+                  <span class="pill pill-urgent" data-i18n="w.sameDay">Same-day · guest arrives 15:00</span></div>
               </div>
               <div class="turn-cleaner">
                 <b>Josefina Cruz</b>
-                <span>Accepted 06:55 · 3h window</span>
+                <span><span data-i18n="w.accepted">Accepted</span> 06:55 · <span data-i18n="w.window">3h window</span></span>
               </div>
-              <div><span class="pill pill-ok"><i class="dot"></i>Confirmed</span></div>
+              <div><span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.confirmed">Confirmed</span></span></div>
             </div>
 
           </div>
@@ -422,25 +465,23 @@
     <section id="calendar" hidden>
       <div class="head">
         <div>
-          <h1>All properties</h1>
-          <p class="sub">9 – 22 September · Airbnb and Booking.com in one view</p>
+          <h1 data-i18n="cal.title">All properties</h1>
+          <p class="sub" data-i18n="cal.sub">9 – 22 September · Airbnb and Booking.com in one view</p>
         </div>
-        <button class="btn">Add calendar</button>
+        <button class="btn" data-i18n="cal.add">Add calendar</button>
       </div>
 
       <div class="stack">
-        <div class="cal-wrap">
-          <div class="cal" id="cal"></div>
-        </div>
+        <div class="cal-wrap"><div class="cal" id="cal"></div></div>
         <div class="legend">
           <span><i style="background:var(--accent-soft); border:1px solid var(--accent)"></i>Airbnb</span>
           <span><i style="background:var(--surface-2); border:1px solid var(--line-2)"></i>Booking.com</span>
-          <span><i style="background:var(--urgent); width:3px; border-radius:2px"></i>Same-day turnover</span>
-          <span><i style="background:var(--accent-soft)"></i>Today</span>
+          <span><i style="background:var(--urgent); width:3px; border-radius:2px"></i><span data-i18n="cal.legSame">Same-day turnover</span></span>
+          <span><i style="background:var(--accent-soft)"></i><span data-i18n="cal.legToday">Today</span></span>
         </div>
-        <div class="banner">
-          <div><b>16 September is Independence Day.</b> Occupancy across all four properties is at 100% that week — three
-            turnovers land on the 16th alone. Worth confirming cleaner availability now rather than the morning of.</div>
+        <div class="banner"><div data-i18n-html="cal.fiesta">
+          <b>16 September is Independence Day.</b> Occupancy across all four properties is at 100% that week — three
+          turnovers land on the 16th alone. Worth confirming cleaner availability now rather than the morning of.</div>
         </div>
       </div>
     </section>
@@ -449,19 +490,23 @@
     <section id="properties" hidden>
       <div class="head">
         <div>
-          <h1>Properties</h1>
-          <p class="sub">4 properties · 5 calendars connected · all syncing</p>
+          <h1 data-i18n="prop.title">Properties</h1>
+          <p class="sub" data-i18n="prop.sub">4 properties · 5 calendars connected · all syncing</p>
         </div>
-        <button class="btn btn-primary">Add property</button>
+        <button class="btn btn-primary" data-i18n="prop.add">Add property</button>
       </div>
 
       <div class="stack">
         <div class="card rows">
-          <div class="row row-prop rowhead"><span>Property</span><span>Calendars</span><span>Checkout</span><span>Cleaner order</span></div>
+          <div class="row row-prop rowhead">
+            <span data-i18n="prop.cProperty">Property</span><span data-i18n="prop.cCalendars">Calendars</span>
+            <span data-i18n="prop.cCheckout">Checkout</span><span data-i18n="prop.cOrder">Cleaner order</span>
+          </div>
 
           <div class="row row-prop">
             <div class="cellname"><b>Roma Norte 42</b><span>Colima 118, int 4 · Roma Norte</span></div>
-            <div class="stack-chips"><span class="pill pill-quiet">Airbnb</span><span class="pill pill-ok"><i class="dot"></i>Synced 06:00</span></div>
+            <div class="stack-chips"><span class="pill pill-quiet">Airbnb</span>
+              <span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.synced">Synced</span> 06:00</span></div>
             <div class="num" style="font-size:13.5px">11:00 → 15:00</div>
             <div class="ladder">
               <div class="prio"><span class="rank">1</span>María Hernández</div>
@@ -471,7 +516,8 @@
 
           <div class="row row-prop">
             <div class="cellname"><b>Condesa Loft</b><span>Ámsterdam 71 · Hipódromo</span></div>
-            <div class="stack-chips"><span class="pill pill-quiet">Airbnb</span><span class="pill pill-ok"><i class="dot"></i>Synced 06:00</span></div>
+            <div class="stack-chips"><span class="pill pill-quiet">Airbnb</span>
+              <span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.synced">Synced</span> 06:00</span></div>
             <div class="num" style="font-size:13.5px">11:00 → 15:00</div>
             <div class="ladder">
               <div class="prio"><span class="rank">1</span>María Hernández</div>
@@ -482,7 +528,8 @@
 
           <div class="row row-prop">
             <div class="cellname"><b>Polanco 15B</b><span>Emilio Castelar 30 · Polanco</span></div>
-            <div class="stack-chips"><span class="pill pill-quiet">Airbnb</span><span class="pill pill-quiet">Booking</span><span class="pill pill-ok"><i class="dot"></i>Synced 06:00</span></div>
+            <div class="stack-chips"><span class="pill pill-quiet">Airbnb</span><span class="pill pill-quiet">Booking</span>
+              <span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.synced">Synced</span> 06:00</span></div>
             <div class="num" style="font-size:13.5px">12:00 → 15:00</div>
             <div class="ladder">
               <div class="prio"><span class="rank">1</span>Josefina Cruz</div>
@@ -492,7 +539,8 @@
 
           <div class="row row-prop">
             <div class="cellname"><b>Coyoacán Casita</b><span>Francisco Sosa 210 · Coyoacán</span></div>
-            <div class="stack-chips"><span class="pill pill-quiet">Airbnb</span><span class="pill pill-ok"><i class="dot"></i>Synced 06:00</span></div>
+            <div class="stack-chips"><span class="pill pill-quiet">Airbnb</span>
+              <span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.synced">Synced</span> 06:00</span></div>
             <div class="num" style="font-size:13.5px">10:00 → 16:00</div>
             <div class="ladder">
               <div class="prio"><span class="rank">1</span>María Hernández</div>
@@ -503,16 +551,17 @@
         </div>
 
         <div class="notes">
+          <div class="notes-flag">Design notes · English only, not part of the product</div>
           <div class="note">
             <b>Open question for the client — property access</b>
             <p>This screen assumes any cleaner on the list can get in. If entry depends on a physical key held by one
-              person, the fallback order below is fiction — we would need a "who holds the key" field and the cascade
-              would have to respect it. Worth asking before this is built.</p>
+              person, the fallback order is fiction — we would need a "who holds the key" field and the cascade would
+              have to respect it. Worth asking before this is built.</p>
           </div>
           <div class="note">
             <b>Open question — when the clean actually happens</b>
             <p>Jobs are triggered by checkout here. If the client cleans the day before the next arrival instead, the
-              trigger changes and the "Next guest" date becomes the scheduling anchor, not the checkout.</p>
+              trigger changes and "Next guest" becomes the scheduling anchor, not the checkout time.</p>
           </div>
         </div>
       </div>
@@ -522,58 +571,74 @@
     <section id="cleaners" hidden>
       <div class="head">
         <div>
-          <h1>Cleaners</h1>
-          <p class="sub">5 people · no accounts, no app — they receive a text and tap a link</p>
+          <h1 data-i18n="cln.title">Cleaners</h1>
+          <p class="sub" data-i18n="cln.sub">5 people · no accounts, no app — they receive a text and tap a link</p>
         </div>
-        <button class="btn btn-primary">Add cleaner</button>
+        <button class="btn btn-primary" data-i18n="cln.add">Add cleaner</button>
       </div>
 
       <div class="stack">
         <div class="card rows">
-          <div class="row row-clean rowhead"><span>Name</span><span>Reaches them by</span><span>Works at</span><span>Usually replies</span></div>
+          <div class="row row-clean rowhead">
+            <span data-i18n="cln.cName">Name</span><span data-i18n="cln.cChannel">Reaches them by</span>
+            <span data-i18n="cln.cLang">Writes to them in</span><span data-i18n="cln.cWorks">Works at</span>
+            <span data-i18n="cln.cReplies">Usually replies</span>
+          </div>
 
           <div class="row row-clean">
             <div class="cellname"><b>María Hernández</b><span class="num">+52 55 1284 0071</span></div>
             <div class="stack-chips"><span class="pill pill-quiet">SMS</span></div>
+            <div><span class="pill pill-lang">Español</span></div>
             <div class="cellname"><span>Roma Norte 42, Condesa Loft, Coyoacán Casita</span></div>
-            <div><span class="num">6 min</span> <span style="color:var(--ink-3); font-size:12px">avg</span></div>
+            <div><span class="num">6 min</span></div>
           </div>
 
           <div class="row row-clean">
             <div class="cellname"><b>Lupita Ramírez</b><span class="num">+52 55 3390 1155</span></div>
             <div class="stack-chips"><span class="pill pill-ok"><i class="dot"></i>Telegram</span></div>
+            <div><span class="pill pill-lang">Español</span></div>
             <div class="cellname"><span>Roma Norte 42, Condesa Loft</span></div>
-            <div><span class="num">3 min</span> <span style="color:var(--ink-3); font-size:12px">avg</span></div>
+            <div><span class="num">3 min</span></div>
           </div>
 
           <div class="row row-clean">
             <div class="cellname"><b>Josefina Cruz</b><span class="num">+52 55 7712 4408</span></div>
             <div class="stack-chips"><span class="pill pill-quiet">SMS</span></div>
+            <div><span class="pill pill-lang">Español</span></div>
             <div class="cellname"><span>Polanco 15B, Condesa Loft</span></div>
-            <div><span class="num">11 min</span> <span style="color:var(--ink-3); font-size:12px">avg</span></div>
+            <div><span class="num">11 min</span></div>
           </div>
 
           <div class="row row-clean">
             <div class="cellname"><b>Carmen Soto</b><span class="num">+52 55 2065 3317</span></div>
             <div class="stack-chips"><span class="pill pill-quiet">SMS</span></div>
+            <div><span class="pill pill-lang">English</span></div>
             <div class="cellname"><span>Polanco 15B, Coyoacán Casita</span></div>
-            <div><span class="num">24 min</span> <span style="color:var(--ink-3); font-size:12px">avg</span></div>
+            <div><span class="num">24 min</span></div>
           </div>
 
           <div class="row row-clean">
             <div class="cellname"><b>Alma Vargas</b><span class="num">+52 55 4417 8890</span></div>
-            <div class="stack-chips"><span class="pill pill-crit"><i class="dot"></i>Unreachable</span></div>
+            <div class="stack-chips"><span class="pill pill-crit"><i class="dot"></i><span data-i18n="w.unreachable">Unreachable</span></span></div>
+            <div><span class="pill pill-lang">Español</span></div>
             <div class="cellname"><span>Coyoacán Casita</span></div>
             <div style="color:var(--ink-3)">—</div>
           </div>
         </div>
 
+        <div class="banner"><div data-i18n-html="cln.langBanner">
+          <b>Each cleaner has their own language.</b> Carmen Soto receives every message in English while the rest get
+          Spanish — the language is a property of the person, not of the account, so one owner can run a mixed team.</div>
+        </div>
+
         <div class="notes">
+          <div class="notes-flag">Design notes · English only, not part of the product</div>
           <div class="note">
             <b>Availability is not modelled yet — and it should be</b>
             <p>Right now the cascade will offer a job to someone who is never free on Sundays, wait for the timeout,
-              then move on — costing a message and 15 minutes for nothing. Recurring days off plus specific blackout
-              dates would let the engine skip them silently. Ask the client how they currently know who is free.</p>
+              then move on — burning a message from the plan and 15 minutes for nothing. Recurring days off plus
+              specific blackout dates would let the engine skip them silently. Ask the client how they currently know
+              who is free.</p>
           </div>
         </div>
       </div>
@@ -583,8 +648,8 @@
     <section id="messages" hidden>
       <div class="head">
         <div>
-          <h1>Message to cleaners</h1>
-          <p class="sub">Every SMS segment costs about $0.05 USD — the editor keeps you inside one</p>
+          <h1 data-i18n="msg.title">Message to cleaners</h1>
+          <p class="sub" data-i18n="msg.sub">One template per language. Each cleaner gets the one they read.</p>
         </div>
       </div>
 
@@ -594,6 +659,8 @@
             <div class="tabs" id="langtabs" role="tablist">
               <button role="tab" aria-selected="true" data-lang="es">Español</button>
               <button role="tab" aria-selected="false" data-lang="en">English</button>
+              <button role="tab" aria-selected="false" data-lang="fr">Français</button>
+              <button role="tab" aria-selected="false" data-lang="nl">Nederlands</button>
             </div>
             <textarea id="tpl" spellcheck="false" aria-label="Message template"></textarea>
             <div class="vars">
@@ -601,7 +668,7 @@
               <span class="var">{{checkout_time}}</span><span class="var">{{link}}</span>
             </div>
             <div>
-              <div class="eyebrow" style="margin-bottom:6px">As Josefina will receive it</div>
+              <div class="eyebrow" style="margin-bottom:6px" id="previewLabel">As it will be received</div>
               <div class="preview num" id="preview"></div>
             </div>
           </div>
@@ -609,61 +676,69 @@
           <div style="display:flex; flex-direction:column; gap:13px">
             <div class="gauge" id="gauge">
               <div class="gauge-hd" id="gaugeHd">Fits in one message</div>
-              <div class="gauge-row"><span>Characters</span><b id="gChars">0 / 160</b></div>
-              <div class="gauge-row"><span>Encoding</span><b id="gEnc">GSM-7</b></div>
-              <div class="gauge-row"><span>Segments</span><b id="gSeg">1</b></div>
-              <div class="gauge-row"><span>Cost per send</span><b id="gCost">$0.05</b></div>
+              <div class="gauge-row"><span data-i18n="gauge.chars">Characters</span><b id="gChars">0 / 160</b></div>
+              <div class="gauge-row"><span data-i18n="gauge.limit">Limit for these characters</span><b id="gEnc">160</b></div>
+              <div class="gauge-row"><span data-i18n="gauge.uses">Uses from your plan</span><b id="gSeg">1</b></div>
               <p class="gauge-note" id="gNote"></p>
             </div>
             <div class="card pad" style="display:flex; flex-direction:column; gap:9px">
-              <div class="eyebrow">Accents</div>
-              <p style="font-size:12.5px; color:var(--ink-2); line-height:1.5">Accented characters cut an SMS from 160
-                to 70 characters. Turno strips them from texts only — Telegram and WhatsApp keep full spelling.</p>
+              <div class="eyebrow" data-i18n="accents.title">Accents</div>
+              <p style="font-size:12.5px; color:var(--ink-2); line-height:1.5" data-i18n="accents.body">
+                Accented characters cut a text message from 160 to 70 characters, so a message with accents uses more
+                of your plan. Turno removes them from texts only — Telegram keeps full spelling.</p>
               <label style="display:flex; gap:8px; align-items:center; font-size:13px; font-weight:500">
-                <input type="checkbox" id="strip" checked> Strip accents from SMS
+                <input type="checkbox" id="strip" checked>
+                <span data-i18n="accents.toggle">Remove accents from text messages</span>
               </label>
             </div>
           </div>
         </div>
 
         <div class="block">
-          <div class="block-head"><h2>Recent messages</h2><span class="eyebrow">142 sent this month</span></div>
+          <div class="block-head">
+            <h2 data-i18n="msg.recent">Recent messages</h2>
+            <span class="eyebrow" data-i18n="msg.sent">142 sent this month</span>
+          </div>
           <div class="card rows">
-            <div class="row row-msg rowhead"><span>Time</span><span>To</span><span>Property</span><span>Channel</span><span>Status</span></div>
+            <div class="row row-msg rowhead">
+              <span data-i18n="msg.cTime">Time</span><span data-i18n="msg.cTo">To</span>
+              <span data-i18n="msg.cProp">Property</span><span data-i18n="msg.cChannel">Sent as</span>
+              <span data-i18n="msg.cStatus">Status</span>
+            </div>
             <div class="row row-msg">
               <span class="num">08:32</span>
               <div class="cellname"><b>Alma Vargas</b><span class="num">+52 55 4417 8890</span></div>
               <span style="font-size:13px">Coyoacán Casita</span>
-              <span class="pill pill-quiet">SMS · 1 seg</span>
-              <span class="pill pill-crit"><i class="dot"></i>Failed</span>
+              <div class="stack-chips"><span class="pill pill-quiet">SMS</span><span class="pill pill-lang">ES</span></div>
+              <span class="pill pill-crit"><i class="dot"></i><span data-i18n="w.failed">Failed</span></span>
             </div>
             <div class="row row-msg">
               <span class="num">08:12</span>
-              <div class="cellname"><b>María Hernández</b><span>Declined</span></div>
+              <div class="cellname"><b>María Hernández</b><span data-i18n="w.declinedCap">Declined</span></div>
               <span style="font-size:13px">Coyoacán Casita</span>
-              <span class="pill pill-quiet">SMS · 1 seg</span>
-              <span class="pill pill-ok"><i class="dot"></i>Delivered</span>
+              <div class="stack-chips"><span class="pill pill-quiet">SMS</span><span class="pill pill-lang">ES</span></div>
+              <span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.delivered">Delivered</span></span>
             </div>
             <div class="row row-msg">
               <span class="num">07:55</span>
-              <div class="cellname"><b>María Hernández</b><span>No reply yet</span></div>
+              <div class="cellname"><b>María Hernández</b><span data-i18n="w.noReply">No reply yet</span></div>
               <span style="font-size:13px">Condesa Loft</span>
-              <span class="pill pill-quiet">SMS · 1 seg</span>
-              <span class="pill pill-ok"><i class="dot"></i>Delivered</span>
+              <div class="stack-chips"><span class="pill pill-quiet">SMS</span><span class="pill pill-lang">ES</span></div>
+              <span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.delivered">Delivered</span></span>
             </div>
             <div class="row row-msg">
-              <span class="num">07:38</span>
-              <div class="cellname"><b>María Hernández</b><span>Accepted 07:41</span></div>
-              <span style="font-size:13px">Roma Norte 42</span>
-              <span class="pill pill-quiet">SMS · 1 seg</span>
-              <span class="pill pill-ok"><i class="dot"></i>Delivered</span>
+              <span class="num">07:41</span>
+              <div class="cellname"><b>Carmen Soto</b><span data-i18n="w.noReply">No reply yet</span></div>
+              <span style="font-size:13px">Polanco 15B</span>
+              <div class="stack-chips"><span class="pill pill-quiet">SMS</span><span class="pill pill-lang">EN</span></div>
+              <span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.delivered">Delivered</span></span>
             </div>
             <div class="row row-msg">
               <span class="num">06:52</span>
-              <div class="cellname"><b>Josefina Cruz</b><span>Accepted 06:55</span></div>
+              <div class="cellname"><b>Josefina Cruz</b><span><span data-i18n="w.accepted">Accepted</span> 06:55</span></div>
               <span style="font-size:13px">Polanco 15B</span>
-              <span class="pill pill-quiet">SMS · 1 seg</span>
-              <span class="pill pill-ok"><i class="dot"></i>Delivered</span>
+              <div class="stack-chips"><span class="pill pill-ok"><i class="dot"></i>Telegram</span><span class="pill pill-lang">ES</span></div>
+              <span class="pill pill-ok"><i class="dot"></i><span data-i18n="w.delivered">Delivered</span></span>
             </div>
           </div>
         </div>
@@ -674,45 +749,45 @@
     <section id="cleanerview" hidden>
       <div class="head">
         <div>
-          <h1>What the cleaner sees</h1>
-          <p class="sub">A text with a link — no app, no account, no password</p>
+          <h1 data-i18n="cv.title">What the cleaner sees</h1>
+          <p class="sub" data-i18n="cv.sub">A text with a link — no app, no account, no password</p>
         </div>
       </div>
 
       <div class="phone-stage">
-        <div class="phone">
-          <div class="phone-bar"><span>9:41</span><span>Telcel</span></div>
-          <div class="phone-scroll">
-            <div class="sms">
-              <div class="sms-from">Mensaje de Turno · 07:55</div>
-              <div class="bubble">Hola Josefina: limpieza en Polanco 15B hoy 9 sep despues de las 12:00.
-                Confirma aqui: <a href="#cleanerview">turno.mx/j/K7QD2</a></div>
-            </div>
-            <div class="job">
-              <div class="job-hd">
-                <span class="eyebrow">Salida hoy · entrada 15:00</span>
-                <h3>Polanco 15B</h3>
+        <div>
+          <div class="phone-switch tabs" id="cvSwitch" role="tablist">
+            <button role="tab" aria-selected="true" data-cv="es">Josefina · ES</button>
+            <button role="tab" aria-selected="false" data-cv="en">Carmen · EN</button>
+            <button role="tab" aria-selected="false" data-cv="fr">FR</button>
+            <button role="tab" aria-selected="false" data-cv="nl">NL</button>
+          </div>
+          <div class="phone">
+            <div class="phone-bar"><span>9:41</span><span>Telcel</span></div>
+            <div class="phone-scroll">
+              <div class="sms">
+                <div class="sms-from" id="cvFrom">Message from Turno · 07:55</div>
+                <div class="bubble" id="cvSms"></div>
               </div>
-              <div class="job-facts">
-                <div class="fact"><span>Dirección</span><b>Emilio Castelar 30<br>Polanco</b></div>
-                <div class="fact"><span>Salida del huésped</span><b class="num">12:00</b></div>
-                <div class="fact"><span>Llega el siguiente</span><b class="num">15:00</b></div>
-                <div class="fact"><span>Tienes</span><b>3 horas</b></div>
-                <div class="fact"><span>Entrada</span><b>Caja de llaves<br><span class="num">4471</span></b></div>
+              <div class="job">
+                <div class="job-hd">
+                  <span class="eyebrow" id="cvEyebrow"></span>
+                  <h3>Polanco 15B</h3>
+                </div>
+                <div class="job-facts" id="cvFacts"></div>
+                <div class="job-note" id="cvNote"></div>
+                <div class="job-acts">
+                  <button class="big big-yes" id="cvYes"></button>
+                  <button class="big" id="cvNo"></button>
+                </div>
+                <p style="font-size:11.5px; color:var(--ink-3); text-align:center; line-height:1.5" id="cvFoot"></p>
               </div>
-              <div class="job-note">Cambiar sábanas de las dos recámaras. Toallas limpias están en el clóset del pasillo.
-                Avisa si falta jabón.</div>
-              <div class="job-acts">
-                <button class="big big-yes">Sí, yo la hago</button>
-                <button class="big">Hoy no puedo</button>
-              </div>
-              <p style="font-size:11.5px; color:var(--ink-3); text-align:center; line-height:1.5">
-                Si no puedes, le avisamos a Umer y le ofrecemos el trabajo a alguien más.</p>
             </div>
           </div>
         </div>
 
         <div class="notes">
+          <div class="notes-flag">Design notes · English only, not part of the product</div>
           <div class="note">
             <b>This screen is the alternative to building an app</b>
             <p>Everything a cleaner needs — job details, access code, accept or decline — arrives through a link in the
@@ -721,15 +796,15 @@
               it is on the discovery list.</p>
           </div>
           <div class="note">
+            <b>Language follows the person, not the property</b>
+            <p>Switch the tabs above: the same job renders in whichever language that cleaner was assigned. A Belgian
+              owner can run the dashboard in Dutch or French while their Mexico City team reads Spanish and one
+              English-speaking cleaner reads English — all from one template set.</p>
+          </div>
+          <div class="note">
             <b>The access code is doing a lot of work here</b>
             <p>A lockbox code makes reassignment trivial — any cleaner in the fallback order can be sent. A physical key
               handed between people would break it. The prototype assumes a lockbox; confirm with the client.</p>
-          </div>
-          <div class="note">
-            <b>Declining is a first-class action, not a failure</b>
-            <p>Tapping "Hoy no puedo" costs nothing and immediately advances the cascade — far better than silence,
-              which forces a 15-minute timeout before the next cleaner hears anything. The copy should make declining
-              feel normal, so cleaners actually use it.</p>
           </div>
         </div>
       </div>
@@ -739,7 +814,224 @@
 
 <script>
 (function(){
-  /* ---------- navigation ---------- */
+  /* ===================== i18n ===================== */
+  var I18N = {
+    en:{
+      "nav.today":"Today","nav.calendar":"Calendar","nav.properties":"Properties","nav.cleaners":"Cleaners",
+      "nav.messages":"Messages","nav.cleanerview":"Cleaner view",
+      "meter.title":"Your plan",
+      "meter.note":"<b>58 messages left</b> of 200 this month.<br>Renews 1 October.",
+      "today.title":"Wednesday, 9 September",
+      "today.sub":"4 checkouts today · 1 same-day turnover · 3 of 4 cleaners confirmed",
+      "today.sync":"Sync calendars now","today.needs":"Needs you","today.turnovers":"Today's turnovers",
+      "today.tz":"Times are checkout, CDMX",
+      "alert.failTitle":"Message to Alma Vargas could not be delivered",
+      "alert.failBody":"Carrier rejected +52 55 4417 8890 — number unreachable. Coyoacán Casita is still unassigned.",
+      "alert.updateNum":"Update number","alert.offerElse":"Offer to someone else",
+      "alert.waitTitle":"Condesa Loft — no answer from María yet",
+      "alert.waitBody":"Offered 18 minutes ago. Moves to Lupita Ramírez automatically in 12 minutes.",
+      "alert.skip":"Skip to Lupita","alert.keepWaiting":"Keep waiting",
+      "w.checkout":"Checkout","w.nextGuest":"Next guest","w.declined":"declined","w.declinedCap":"Declined",
+      "w.undelivered":"undelivered","w.notOffered":"not offered","w.unassigned":"Unassigned",
+      "w.accepted":"Accepted","w.arriving":"arriving","w.confirmed":"Confirmed","w.waiting":"waiting","w.in":"in",
+      "w.awaiting":"Awaiting reply","w.sameDay":"Same-day · guest arrives 15:00","w.window":"3h window",
+      "w.synced":"Synced","w.unreachable":"Unreachable","w.failed":"Failed","w.delivered":"Delivered",
+      "w.noReply":"No reply yet",
+      "cal.title":"All properties","cal.sub":"9 – 22 September · Airbnb and Booking.com in one view",
+      "cal.add":"Add calendar","cal.legSame":"Same-day turnover","cal.legToday":"Today",
+      "cal.fiesta":"<b>16 September is Independence Day.</b> Occupancy across all four properties is at 100% that week — three turnovers land on the 16th alone. Worth confirming cleaner availability now rather than the morning of.",
+      "cal.month":"September 2026",
+      "prop.title":"Properties","prop.sub":"4 properties · 5 calendars connected · all syncing",
+      "prop.add":"Add property","prop.cProperty":"Property","prop.cCalendars":"Calendars","prop.cCheckout":"Checkout",
+      "prop.cOrder":"Cleaner order",
+      "cln.title":"Cleaners","cln.sub":"5 people · no accounts, no app — they receive a text and tap a link",
+      "cln.add":"Add cleaner","cln.cName":"Name","cln.cChannel":"Reaches them by","cln.cLang":"Writes to them in",
+      "cln.cWorks":"Works at","cln.cReplies":"Usually replies",
+      "cln.langBanner":"<b>Each cleaner has their own language.</b> Carmen Soto receives every message in English while the rest get Spanish — the language is a property of the person, not of the account, so one owner can run a mixed team.",
+      "msg.title":"Message to cleaners","msg.sub":"One template per language. Each cleaner gets the one they read.",
+      "msg.recent":"Recent messages","msg.sent":"142 sent this month","msg.cTime":"Time","msg.cTo":"To",
+      "msg.cProp":"Property","msg.cChannel":"Sent as","msg.cStatus":"Status",
+      "msg.preview":"As it will be received",
+      "gauge.chars":"Characters","gauge.limit":"Limit for these characters","gauge.uses":"Uses from your plan",
+      "gauge.fits":"Fits in one message","gauge.over":"Too long — uses {n} messages",
+      "gauge.noteOk":"Plain characters, so you get the full 160. Notifying one cleaner uses one message from your plan.",
+      "gauge.noteAcc":"Accented text drops the limit to 70 characters. Still one message, but there is little room left.",
+      "gauge.noteBad":"Every send will take {n} messages from your plan instead of 1. Shorten it, or remove accents.",
+      "accents.title":"Accents",
+      "accents.body":"Accented characters cut a text message from 160 to 70 characters, so a message with accents uses more of your plan. Turno removes them from texts only — Telegram keeps full spelling.",
+      "accents.toggle":"Remove accents from text messages",
+      "cv.title":"What the cleaner sees","cv.sub":"A text with a link — no app, no account, no password"
+    },
+    es:{
+      "nav.today":"Hoy","nav.calendar":"Calendario","nav.properties":"Propiedades","nav.cleaners":"Limpiadoras",
+      "nav.messages":"Mensajes","nav.cleanerview":"Vista limpiadora",
+      "meter.title":"Tu plan",
+      "meter.note":"<b>Quedan 58 mensajes</b> de 200 este mes.<br>Se renueva el 1 de octubre.",
+      "today.title":"Miércoles, 9 de septiembre",
+      "today.sub":"4 salidas hoy · 1 cambio el mismo día · 3 de 4 limpiadoras confirmadas",
+      "today.sync":"Sincronizar calendarios","today.needs":"Requiere tu atención","today.turnovers":"Cambios de hoy",
+      "today.tz":"Horas de salida, CDMX",
+      "alert.failTitle":"No se pudo entregar el mensaje a Alma Vargas",
+      "alert.failBody":"La operadora rechazó el +52 55 4417 8890 — número inalcanzable. Coyoacán Casita sigue sin asignar.",
+      "alert.updateNum":"Actualizar número","alert.offerElse":"Ofrecer a otra persona",
+      "alert.waitTitle":"Condesa Loft — María aún no responde",
+      "alert.waitBody":"Ofrecido hace 18 minutos. Pasa a Lupita Ramírez automáticamente en 12 minutos.",
+      "alert.skip":"Pasar a Lupita","alert.keepWaiting":"Seguir esperando",
+      "w.checkout":"Salida","w.nextGuest":"Próximo huésped","w.declined":"rechazó","w.declinedCap":"Rechazó",
+      "w.undelivered":"no entregado","w.notOffered":"sin ofrecer","w.unassigned":"Sin asignar",
+      "w.accepted":"Aceptó","w.arriving":"llega","w.confirmed":"Confirmada","w.waiting":"esperando","w.in":"en",
+      "w.awaiting":"Esperando respuesta","w.sameDay":"Mismo día · huésped llega 15:00","w.window":"ventana de 3h",
+      "w.synced":"Sincronizado","w.unreachable":"Inalcanzable","w.failed":"Falló","w.delivered":"Entregado",
+      "w.noReply":"Sin respuesta",
+      "cal.title":"Todas las propiedades","cal.sub":"9 – 22 de septiembre · Airbnb y Booking.com en una vista",
+      "cal.add":"Añadir calendario","cal.legSame":"Cambio el mismo día","cal.legToday":"Hoy",
+      "cal.fiesta":"<b>El 16 de septiembre es el Día de la Independencia.</b> Las cuatro propiedades están al 100% esa semana — tres cambios caen solo el día 16. Conviene confirmar la disponibilidad ahora y no esa mañana.",
+      "cal.month":"Septiembre 2026",
+      "prop.title":"Propiedades","prop.sub":"4 propiedades · 5 calendarios conectados · todos sincronizando",
+      "prop.add":"Añadir propiedad","prop.cProperty":"Propiedad","prop.cCalendars":"Calendarios",
+      "prop.cCheckout":"Salida","prop.cOrder":"Orden de limpiadoras",
+      "cln.title":"Limpiadoras","cln.sub":"5 personas · sin cuentas ni app — reciben un mensaje y tocan un enlace",
+      "cln.add":"Añadir limpiadora","cln.cName":"Nombre","cln.cChannel":"Se le contacta por",
+      "cln.cLang":"Se le escribe en","cln.cWorks":"Trabaja en","cln.cReplies":"Suele responder",
+      "cln.langBanner":"<b>Cada limpiadora tiene su propio idioma.</b> Carmen Soto recibe todo en inglés y el resto en español — el idioma pertenece a la persona, no a la cuenta, así que un solo propietario puede tener un equipo mixto.",
+      "msg.title":"Mensaje a las limpiadoras","msg.sub":"Una plantilla por idioma. Cada persona recibe la suya.",
+      "msg.recent":"Mensajes recientes","msg.sent":"142 enviados este mes","msg.cTime":"Hora","msg.cTo":"Para",
+      "msg.cProp":"Propiedad","msg.cChannel":"Enviado como","msg.cStatus":"Estado",
+      "msg.preview":"Como se recibirá",
+      "gauge.chars":"Caracteres","gauge.limit":"Límite con estos caracteres","gauge.uses":"Consume de tu plan",
+      "gauge.fits":"Cabe en un mensaje","gauge.over":"Muy largo — usa {n} mensajes",
+      "gauge.noteOk":"Caracteres simples, así que tienes los 160 completos. Avisar a una limpiadora consume un mensaje de tu plan.",
+      "gauge.noteAcc":"Con acentos el límite baja a 70 caracteres. Sigue siendo un mensaje, pero queda poco margen.",
+      "gauge.noteBad":"Cada envío consumirá {n} mensajes de tu plan en vez de 1. Acórtalo o quita los acentos.",
+      "accents.title":"Acentos",
+      "accents.body":"Los acentos reducen un SMS de 160 a 70 caracteres, así que un mensaje con acentos consume más de tu plan. Turno los quita solo en los SMS — Telegram conserva la ortografía completa.",
+      "accents.toggle":"Quitar acentos en los SMS",
+      "cv.title":"Lo que ve la limpiadora","cv.sub":"Un mensaje con un enlace — sin app, sin cuenta, sin contraseña"
+    },
+    fr:{
+      "nav.today":"Aujourd'hui","nav.calendar":"Calendrier","nav.properties":"Logements","nav.cleaners":"Personnel",
+      "nav.messages":"Messages","nav.cleanerview":"Vue personnel",
+      "meter.title":"Votre forfait",
+      "meter.note":"<b>58 messages restants</b> sur 200 ce mois-ci.<br>Renouvellement le 1er octobre.",
+      "today.title":"Mercredi 9 septembre",
+      "today.sub":"4 départs aujourd'hui · 1 rotation le jour même · 3 sur 4 confirmées",
+      "today.sync":"Synchroniser les calendriers","today.needs":"Votre attention","today.turnovers":"Rotations du jour",
+      "today.tz":"Heures de départ, CDMX",
+      "alert.failTitle":"Le message à Alma Vargas n'a pas pu être livré",
+      "alert.failBody":"L'opérateur a rejeté le +52 55 4417 8890 — numéro injoignable. Coyoacán Casita reste non attribué.",
+      "alert.updateNum":"Modifier le numéro","alert.offerElse":"Proposer à quelqu'un d'autre",
+      "alert.waitTitle":"Condesa Loft — María n'a pas encore répondu",
+      "alert.waitBody":"Proposé il y a 18 minutes. Passe automatiquement à Lupita Ramírez dans 12 minutes.",
+      "alert.skip":"Passer à Lupita","alert.keepWaiting":"Continuer d'attendre",
+      "w.checkout":"Départ","w.nextGuest":"Prochain voyageur","w.declined":"a refusé","w.declinedCap":"A refusé",
+      "w.undelivered":"non livré","w.notOffered":"non proposé","w.unassigned":"Non attribué",
+      "w.accepted":"Acceptée","w.arriving":"arrivée","w.confirmed":"Confirmée","w.waiting":"attente","w.in":"dans",
+      "w.awaiting":"En attente de réponse","w.sameDay":"Jour même · arrivée 15:00","w.window":"fenêtre de 3h",
+      "w.synced":"Synchronisé","w.unreachable":"Injoignable","w.failed":"Échec","w.delivered":"Livré",
+      "w.noReply":"Pas de réponse",
+      "cal.title":"Tous les logements","cal.sub":"9 – 22 septembre · Airbnb et Booking.com en une vue",
+      "cal.add":"Ajouter un calendrier","cal.legSame":"Rotation le jour même","cal.legToday":"Aujourd'hui",
+      "cal.fiesta":"<b>Le 16 septembre est la fête de l'Indépendance.</b> Les quatre logements sont à 100% cette semaine — trois rotations tombent le 16. Mieux vaut confirmer les disponibilités maintenant que le matin même.",
+      "cal.month":"Septembre 2026",
+      "prop.title":"Logements","prop.sub":"4 logements · 5 calendriers connectés · tous synchronisés",
+      "prop.add":"Ajouter un logement","prop.cProperty":"Logement","prop.cCalendars":"Calendriers",
+      "prop.cCheckout":"Départ","prop.cOrder":"Ordre du personnel",
+      "cln.title":"Personnel de ménage","cln.sub":"5 personnes · sans compte ni application — un SMS et un lien à toucher",
+      "cln.add":"Ajouter une personne","cln.cName":"Nom","cln.cChannel":"Contact par","cln.cLang":"Écrit en",
+      "cln.cWorks":"Travaille à","cln.cReplies":"Répond en général",
+      "cln.langBanner":"<b>Chaque personne a sa propre langue.</b> Carmen Soto reçoit tout en anglais, les autres en espagnol — la langue appartient à la personne et non au compte, donc une équipe mixte fonctionne.",
+      "msg.title":"Message au personnel","msg.sub":"Un modèle par langue. Chacun reçoit celui qu'il lit.",
+      "msg.recent":"Messages récents","msg.sent":"142 envoyés ce mois-ci","msg.cTime":"Heure","msg.cTo":"À",
+      "msg.cProp":"Logement","msg.cChannel":"Envoyé par","msg.cStatus":"Statut",
+      "msg.preview":"Tel qu'il sera reçu",
+      "gauge.chars":"Caractères","gauge.limit":"Limite pour ces caractères","gauge.uses":"Consomme du forfait",
+      "gauge.fits":"Tient en un message","gauge.over":"Trop long — utilise {n} messages",
+      "gauge.noteOk":"Caractères simples, vous avez donc les 160. Prévenir une personne consomme un message du forfait.",
+      "gauge.noteAcc":"Avec accents la limite tombe à 70 caractères. Toujours un message, mais la marge est faible.",
+      "gauge.noteBad":"Chaque envoi prendra {n} messages du forfait au lieu d'un. Raccourcissez, ou retirez les accents.",
+      "accents.title":"Accents",
+      "accents.body":"Les accents réduisent un SMS de 160 à 70 caractères, donc un message accentué consomme davantage du forfait. Turno les retire uniquement des SMS — Telegram garde l'orthographe complète.",
+      "accents.toggle":"Retirer les accents des SMS",
+      "cv.title":"Ce que voit la personne","cv.sub":"Un SMS avec un lien — sans application, sans compte, sans mot de passe"
+    },
+    nl:{
+      "nav.today":"Vandaag","nav.calendar":"Kalender","nav.properties":"Woningen","nav.cleaners":"Poetsers",
+      "nav.messages":"Berichten","nav.cleanerview":"Weergave poetser",
+      "meter.title":"Je pakket",
+      "meter.note":"<b>Nog 58 berichten</b> van 200 deze maand.<br>Vernieuwt op 1 oktober.",
+      "today.title":"Woensdag 9 september",
+      "today.sub":"4 vertrekken vandaag · 1 wissel dezelfde dag · 3 van 4 poetsers bevestigd",
+      "today.sync":"Kalenders nu synchroniseren","today.needs":"Vraagt je aandacht","today.turnovers":"Wissels van vandaag",
+      "today.tz":"Vertrektijden, CDMX",
+      "alert.failTitle":"Bericht aan Alma Vargas kon niet bezorgd worden",
+      "alert.failBody":"Operator weigerde +52 55 4417 8890 — nummer onbereikbaar. Coyoacán Casita is nog niet toegewezen.",
+      "alert.updateNum":"Nummer aanpassen","alert.offerElse":"Aan iemand anders aanbieden",
+      "alert.waitTitle":"Condesa Loft — María heeft nog niet geantwoord",
+      "alert.waitBody":"18 minuten geleden aangeboden. Gaat over 12 minuten automatisch naar Lupita Ramírez.",
+      "alert.skip":"Door naar Lupita","alert.keepWaiting":"Blijven wachten",
+      "w.checkout":"Vertrek","w.nextGuest":"Volgende gast","w.declined":"weigerde","w.declinedCap":"Geweigerd",
+      "w.undelivered":"niet bezorgd","w.notOffered":"niet aangeboden","w.unassigned":"Niet toegewezen",
+      "w.accepted":"Aanvaard","w.arriving":"komt","w.confirmed":"Bevestigd","w.waiting":"wacht","w.in":"over",
+      "w.awaiting":"Wacht op antwoord","w.sameDay":"Zelfde dag · gast komt 15:00","w.window":"venster van 3u",
+      "w.synced":"Gesynchroniseerd","w.unreachable":"Onbereikbaar","w.failed":"Mislukt","w.delivered":"Bezorgd",
+      "w.noReply":"Nog geen antwoord",
+      "cal.title":"Alle woningen","cal.sub":"9 – 22 september · Airbnb en Booking.com in één overzicht",
+      "cal.add":"Kalender toevoegen","cal.legSame":"Wissel dezelfde dag","cal.legToday":"Vandaag",
+      "cal.fiesta":"<b>16 september is Onafhankelijkheidsdag.</b> Alle vier de woningen zitten die week op 100% — drie wissels vallen alleen al op de 16de. Bevestig de beschikbaarheid nu liever dan die ochtend.",
+      "cal.month":"September 2026",
+      "prop.title":"Woningen","prop.sub":"4 woningen · 5 kalenders verbonden · alles synchroniseert",
+      "prop.add":"Woning toevoegen","prop.cProperty":"Woning","prop.cCalendars":"Kalenders","prop.cCheckout":"Vertrek",
+      "prop.cOrder":"Volgorde poetsers",
+      "cln.title":"Poetsers","cln.sub":"5 mensen · geen account, geen app — ze krijgen een sms en tikken op een link",
+      "cln.add":"Poetser toevoegen","cln.cName":"Naam","cln.cChannel":"Bereikbaar via","cln.cLang":"Krijgt bericht in",
+      "cln.cWorks":"Werkt bij","cln.cReplies":"Antwoordt meestal",
+      "cln.langBanner":"<b>Elke poetser heeft een eigen taal.</b> Carmen Soto krijgt alles in het Engels, de rest in het Spaans — de taal hoort bij de persoon, niet bij het account, dus een gemengd team werkt gewoon.",
+      "msg.title":"Bericht aan poetsers","msg.sub":"Eén sjabloon per taal. Iedereen krijgt het sjabloon dat hij leest.",
+      "msg.recent":"Recente berichten","msg.sent":"142 verstuurd deze maand","msg.cTime":"Tijd","msg.cTo":"Aan",
+      "msg.cProp":"Woning","msg.cChannel":"Verstuurd als","msg.cStatus":"Status",
+      "msg.preview":"Zoals het aankomt",
+      "gauge.chars":"Tekens","gauge.limit":"Limiet voor deze tekens","gauge.uses":"Neemt uit je pakket",
+      "gauge.fits":"Past in één bericht","gauge.over":"Te lang — gebruikt {n} berichten",
+      "gauge.noteOk":"Gewone tekens, dus je hebt de volle 160. Eén poetser verwittigen kost één bericht uit je pakket.",
+      "gauge.noteAcc":"Met accenten zakt de limiet naar 70 tekens. Nog steeds één bericht, maar veel ruimte is er niet.",
+      "gauge.noteBad":"Elke verzending neemt {n} berichten uit je pakket in plaats van 1. Kort het in, of haal de accenten weg.",
+      "accents.title":"Accenten",
+      "accents.body":"Accenten verkleinen een sms van 160 naar 70 tekens, dus een bericht met accenten neemt meer uit je pakket. Turno haalt ze alleen uit sms'jes — Telegram houdt de volledige spelling.",
+      "accents.toggle":"Accenten uit sms'jes halen",
+      "cv.title":"Wat de poetser ziet","cv.sub":"Een sms met een link — geen app, geen account, geen wachtwoord"
+    }
+  };
+
+  var DOWS = {
+    en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    es:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
+    fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],
+    nl:['Zo','Ma','Di','Wo','Do','Vr','Za']
+  };
+  var GUESTWORD = {en:'Guest', es:'Huésped', fr:'Voyageur', nl:'Gast'};
+  var CHECKOUTWORD = {en:'checkout', es:'salida', fr:'départ', nl:'vertrek'};
+
+  var uiLang = 'en';
+  function t(k){ return (I18N[uiLang] && I18N[uiLang][k]) || I18N.en[k] || k; }
+
+  /* ===================== theme ===================== */
+  var root = document.documentElement, themeBtn = document.getElementById('themeBtn');
+  function currentTheme(){
+    var set = root.getAttribute('data-theme');
+    if(set) return set;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  try{
+    var saved = localStorage.getItem('turno-theme');
+    if(saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+  }catch(e){}
+  themeBtn.addEventListener('click', function(){
+    var next = currentTheme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try{ localStorage.setItem('turno-theme', next); }catch(e){}
+  });
+
+  /* ===================== navigation ===================== */
   var nav = document.getElementById('nav');
   var screens = ['today','calendar','properties','cleaners','messages','cleanerview'];
   nav.addEventListener('click', function(e){
@@ -750,90 +1042,68 @@
     window.scrollTo(0,0);
   });
 
-  /* ---------- timeline calendar ---------- */
-  var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  var days = [];
-  for(var d=9; d<=22; d++){
-    var wd = new Date(2026, 8, d).getDay();
-    days.push({n:d, dow:DOW[wd], today:d===9, fiesta:d===16});
-  }
+  /* ===================== calendar ===================== */
   var props = [
-    {name:'Roma Norte 42', hood:'11:00 checkout', stays:[
-      {from:9, to:9, src:'Airbnb', label:'Checkout today'},
-      {from:11, to:15, src:'Airbnb', label:'Guest'},
-      {from:18, to:22, src:'Airbnb', label:'Guest'}]},
-    {name:'Condesa Loft', hood:'11:00 checkout', stays:[
-      {from:9, to:9, src:'Airbnb', label:'Checkout today'},
-      {from:13, to:16, src:'Airbnb', label:'Guest'},
-      {from:20, to:22, src:'Airbnb', label:'Guest'}]},
-    {name:'Polanco 15B', hood:'12:00 checkout', stays:[
-      {from:9, to:9, src:'Booking', label:'Checkout'},
-      {from:9, to:13, src:'Airbnb', label:'Guest', turn:true},
-      {from:16, to:19, src:'Booking', label:'Guest'}]},
-    {name:'Coyoacán Casita', hood:'10:00 checkout', stays:[
-      {from:9, to:9, src:'Airbnb', label:'Checkout today'},
-      {from:14, to:17, src:'Airbnb', label:'Guest'},
-      {from:21, to:22, src:'Airbnb', label:'Guest'}]}
+    {name:'Roma Norte 42', out:'11:00', stays:[{f:9,t:9},{f:11,t:15},{f:18,t:22}], src:['Airbnb','Airbnb','Airbnb']},
+    {name:'Condesa Loft', out:'11:00', stays:[{f:9,t:9},{f:13,t:16},{f:20,t:22}], src:['Airbnb','Airbnb','Airbnb']},
+    {name:'Polanco 15B', out:'12:00', stays:[{f:9,t:9},{f:9,t:13,turn:true},{f:16,t:19}], src:['Booking','Airbnb','Booking']},
+    {name:'Coyoacán Casita', out:'10:00', stays:[{f:9,t:9},{f:14,t:17},{f:21,t:22}], src:['Airbnb','Airbnb','Airbnb']}
   ];
+  function drawCal(){
+    var cal = document.getElementById('cal');
+    var dows = DOWS[uiLang] || DOWS.en;
+    var html = '<div class="cal-row cal-head"><div class="cal-corner"><span class="eyebrow">'+t('cal.month')+'</span></div>';
+    for(var d=9; d<=22; d++){
+      var wd = new Date(2026, 8, d).getDay();
+      html += '<div class="cal-daycell'+(d===9?' today':'')+(d===16?' fiesta':'')+'">'+
+              '<div class="dow">'+dows[wd]+'</div><div class="dnum">'+d+'</div></div>';
+    }
+    html += '</div>';
 
-  var cal = document.getElementById('cal');
-  var head = '<div class="cal-row cal-head"><div class="cal-corner"><span class="eyebrow">September 2026</span></div>';
-  days.forEach(function(d){
-    head += '<div class="cal-daycell'+(d.today?' today':'')+(d.fiesta?' fiesta':'')+'">'+
-            '<div class="dow">'+d.dow+'</div><div class="dnum">'+d.n+'</div></div>';
-  });
-  cal.innerHTML = head + '</div>';
-
-  props.forEach(function(p){
-    var row = document.createElement('div');
-    row.className = 'cal-row';
-    var grid = '<div class="cal-grid">';
-    days.forEach(function(d){ grid += '<div class="cal-cellline'+(d.today?' today':'')+'"></div>'; });
-    grid += '</div>';
-
-    var track = '<div class="cal-track">';
-    p.stays.forEach(function(s){
-      var c1 = s.from - 9 + 1, c2 = s.to - 9 + 2;
-      var cls = s.src === 'Airbnb' ? 'stay-abnb' : 'stay-bkg';
-      track += '<div class="stay '+cls+'" style="grid-column:'+c1+' / '+c2+'">'+
-               '<span class="src">'+s.src+'</span><span>'+s.label+'</span></div>';
-      if(s.turn){
-        track += '<div class="turnmark" style="grid-column:'+c1+' / '+(c1+1)+'; justify-self:start; margin-left:1px"></div>';
-      }
+    props.forEach(function(p){
+      var grid = '<div class="cal-grid">';
+      for(var d=9; d<=22; d++){ grid += '<div class="cal-cellline'+(d===9?' today':'')+'"></div>'; }
+      grid += '</div><div class="cal-track">';
+      p.stays.forEach(function(s, i){
+        var c1 = s.f - 9 + 1, c2 = s.t - 9 + 2;
+        var cls = p.src[i] === 'Airbnb' ? 'stay-abnb' : 'stay-bkg';
+        var label = (s.f === 9 && s.t === 9) ? CHECKOUTWORD[uiLang] : GUESTWORD[uiLang];
+        grid += '<div class="stay '+cls+'" style="grid-column:'+c1+' / '+c2+'">'+
+                '<span class="src">'+p.src[i]+'</span><span>'+label+'</span></div>';
+        if(s.turn){
+          grid += '<div class="turnmark" style="grid-column:'+c1+' / '+(c1+1)+'; justify-self:start; margin-left:1px"></div>';
+        }
+      });
+      grid += '</div>';
+      html += '<div class="cal-row"><div class="cal-prop"><b>'+p.name+'</b><span>'+p.out+' '+
+              CHECKOUTWORD[uiLang]+'</span></div>' + grid + '</div>';
     });
-    track += '</div>';
+    cal.innerHTML = html;
+  }
 
-    row.innerHTML = '<div class="cal-prop"><b>'+p.name+'</b><span>'+p.hood+'</span></div>' + grid + track;
-    cal.appendChild(row);
-  });
-
-  /* ---------- SMS segment gauge ---------- */
+  /* ===================== message templates ===================== */
   var GSM = "@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?"
           + "¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
   var GSM_EXT = "^{}\\[~]|€";
   var TPL = {
-    es: "Hola {{cleaner}}: limpieza en {{property}} el {{date}} despues de las {{checkout_time}}. Confirma aqui: {{link}}",
-    en: "Hi {{cleaner}}: cleaning at {{property}} on {{date}} after {{checkout_time}}. Confirm here: {{link}}"
+    es:"Hola {{cleaner}}: limpieza en {{property}} el {{date}} despues de las {{checkout_time}}. Confirma aqui: {{link}}",
+    en:"Hi {{cleaner}}: cleaning at {{property}} on {{date}} after {{checkout_time}}. Confirm here: {{link}}",
+    fr:"Bonjour {{cleaner}} : menage a {{property}} le {{date}} apres {{checkout_time}}. Confirmez ici : {{link}}",
+    nl:"Hallo {{cleaner}}: poetsen in {{property}} op {{date}} na {{checkout_time}}. Bevestig hier: {{link}}"
   };
-  var SAMPLE = {
-    cleaner:'Josefina', property:'Polanco 15B', date:'9 sep', checkout_time:'12:00', link:'turno.mx/j/K7QD2'
-  };
+  var SAMPLE = {cleaner:'Josefina', property:'Polanco 15B', date:'9/9', checkout_time:'12:00', link:'turno.mx/j/K7QD2'};
 
-  var ta = document.getElementById('tpl'),
-      strip = document.getElementById('strip'),
-      preview = document.getElementById('preview'),
-      gauge = document.getElementById('gauge'),
-      gaugeHd = document.getElementById('gaugeHd'),
-      gChars = document.getElementById('gChars'), gEnc = document.getElementById('gEnc'),
-      gSeg = document.getElementById('gSeg'), gCost = document.getElementById('gCost'),
+  var ta = document.getElementById('tpl'), strip = document.getElementById('strip'),
+      preview = document.getElementById('preview'), gauge = document.getElementById('gauge'),
+      gaugeHd = document.getElementById('gaugeHd'), gChars = document.getElementById('gChars'),
+      gEnc = document.getElementById('gEnc'), gSeg = document.getElementById('gSeg'),
       gNote = document.getElementById('gNote');
 
   function deaccent(s){
-    return s.normalize('NFD').replace(/[̀-ͯ]/g,'')
-            .replace(/¿/g,'').replace(/¡/g,'');
+    return s.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[¿¡]/g,'');
   }
-  function render(t){
-    return t.replace(/\{\{(\w+)\}\}/g, function(m,k){ return SAMPLE[k] !== undefined ? SAMPLE[k] : m; });
+  function fill(tp){
+    return tp.replace(/\{\{(\w+)\}\}/g, function(m,k){ return SAMPLE[k] !== undefined ? SAMPLE[k] : m; });
   }
   function measure(s){
     var units = 0, gsm = true;
@@ -849,35 +1119,103 @@
     }
     return {gsm:true, len:units, cap:160, seg: units<=160 ? 1 : Math.ceil(units/153)};
   }
-  function update(){
-    var body = render(ta.value);
+  function updateGauge(){
+    var body = fill(ta.value);
     if(strip.checked) body = deaccent(body);
     preview.textContent = body;
     var m = measure(body);
     gChars.textContent = m.len + ' / ' + m.cap;
-    gEnc.textContent = m.gsm ? 'GSM-7' : 'UCS-2 (accents)';
+    gEnc.textContent = String(m.cap);
     gSeg.textContent = String(m.seg);
-    gCost.textContent = '$' + (m.seg * 0.05).toFixed(2);
     gauge.className = 'gauge ' + (m.seg > 1 ? 'g-bad' : 'g-ok');
-    gaugeHd.textContent = m.seg > 1 ? 'Too long — costs ' + m.seg + ' messages' : 'Fits in one message';
-    gNote.textContent = m.seg > 1
-      ? 'At 10 turnovers per property per month this template costs ' + (m.seg * 0.05 * 10).toFixed(2) +
-        ' USD per property. Shorten it or strip accents to get back to one segment.'
-      : (m.gsm ? 'Plain characters, so you get the full 160. About $0.50 per property per month.'
-               : 'Accented text drops the limit to 70 characters — still one message, but there is little room left.');
+    gaugeHd.textContent = m.seg > 1 ? t('gauge.over').replace('{n}', m.seg) : t('gauge.fits');
+    gNote.textContent = m.seg > 1 ? t('gauge.noteBad').replace('{n}', m.seg)
+                                  : (m.gsm ? t('gauge.noteOk') : t('gauge.noteAcc'));
   }
-  ta.addEventListener('input', update);
-  strip.addEventListener('change', update);
-
+  ta.addEventListener('input', updateGauge);
+  strip.addEventListener('change', updateGauge);
   document.getElementById('langtabs').addEventListener('click', function(e){
     var b = e.target.closest('button[data-lang]');
     if(!b) return;
     this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-selected', x===b ? 'true':'false'); });
     ta.value = TPL[b.dataset.lang];
-    update();
+    updateGauge();
   });
 
+  /* ===================== cleaner view ===================== */
+  var CV = {
+    es:{from:'Mensaje de Turno · 07:55',
+        sms:'Hola Josefina: limpieza en Polanco 15B hoy 9/9 despues de las 12:00. Confirma aqui: ',
+        eyebrow:'Salida hoy · entrada 15:00',
+        facts:[['Dirección','Emilio Castelar 30<br>Polanco'],['Salida del huésped','12:00'],
+               ['Llega el siguiente','15:00'],['Tienes','3 horas'],['Entrada','Caja de llaves<br>4471']],
+        note:'Cambiar sábanas de las dos recámaras. Toallas limpias están en el clóset del pasillo. Avisa si falta jabón.',
+        yes:'Sí, yo la hago', no:'Hoy no puedo',
+        foot:'Si no puedes, le avisamos al propietario y se lo ofrecemos a alguien más.'},
+    en:{from:'Message from Turno · 07:55',
+        sms:'Hi Carmen: cleaning at Polanco 15B today 9/9 after 12:00. Confirm here: ',
+        eyebrow:'Checkout today · next guest 15:00',
+        facts:[['Address','Emilio Castelar 30<br>Polanco'],['Guest leaves','12:00'],
+               ['Next guest arrives','15:00'],['You have','3 hours'],['Entry','Lockbox<br>4471']],
+        note:'Change the sheets in both bedrooms. Clean towels are in the hallway closet. Tell us if soap is running low.',
+        yes:'Yes, I can do it', no:"I can't today",
+        foot:'If you cannot, we let the owner know and offer it to someone else.'},
+    fr:{from:'Message de Turno · 07:55',
+        sms:'Bonjour : menage a Polanco 15B aujourd\'hui 9/9 apres 12:00. Confirmez ici : ',
+        eyebrow:'Départ aujourd\'hui · arrivée 15:00',
+        facts:[['Adresse','Emilio Castelar 30<br>Polanco'],['Départ du voyageur','12:00'],
+               ['Prochaine arrivée','15:00'],['Vous avez','3 heures'],['Entrée','Boîte à clés<br>4471']],
+        note:'Changer les draps des deux chambres. Les serviettes propres sont dans le placard du couloir. Prévenez-nous s\'il manque du savon.',
+        yes:'Oui, je peux', no:'Pas possible aujourd\'hui',
+        foot:'Si vous ne pouvez pas, nous prévenons le propriétaire et proposons à quelqu\'un d\'autre.'},
+    nl:{from:'Bericht van Turno · 07:55',
+        sms:'Hallo: poetsen in Polanco 15B vandaag 9/9 na 12:00. Bevestig hier: ',
+        eyebrow:'Vertrek vandaag · aankomst 15:00',
+        facts:[['Adres','Emilio Castelar 30<br>Polanco'],['Gast vertrekt','12:00'],
+               ['Volgende gast','15:00'],['Je hebt','3 uur'],['Toegang','Sleutelkluis<br>4471']],
+        note:'Verschoon de bedden in beide slaapkamers. Schone handdoeken liggen in de gangkast. Laat weten als de zeep bijna op is.',
+        yes:'Ja, ik doe het', no:'Vandaag lukt niet',
+        foot:'Als het niet lukt, verwittigen we de eigenaar en bieden we het aan iemand anders aan.'}
+  };
+  function drawCV(lang){
+    var c = CV[lang];
+    document.getElementById('cvFrom').textContent = c.from;
+    document.getElementById('cvSms').innerHTML = c.sms + '<a href="#cleanerview">turno.mx/j/K7QD2</a>';
+    document.getElementById('cvEyebrow').textContent = c.eyebrow;
+    document.getElementById('cvFacts').innerHTML = c.facts.map(function(f){
+      return '<div class="fact"><span>'+f[0]+'</span><b>'+f[1]+'</b></div>';
+    }).join('');
+    document.getElementById('cvNote').textContent = c.note;
+    document.getElementById('cvYes').textContent = c.yes;
+    document.getElementById('cvNo').textContent = c.no;
+    document.getElementById('cvFoot').textContent = c.foot;
+  }
+  document.getElementById('cvSwitch').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-cv]');
+    if(!b) return;
+    this.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-selected', x===b ? 'true':'false'); });
+    drawCV(b.dataset.cv);
+  });
+
+  /* ===================== apply language ===================== */
+  function applyLang(lang){
+    uiLang = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+      el.innerHTML = t(el.getAttribute('data-i18n-html'));
+    });
+    document.getElementById('previewLabel').textContent = t('msg.preview');
+    drawCal();
+    updateGauge();
+  }
+  document.getElementById('uiLang').addEventListener('change', function(){ applyLang(this.value); });
+
+  /* ===================== boot ===================== */
   ta.value = TPL.es;
-  update();
+  drawCV('es');
+  applyLang('en');
 })();
 </script>
